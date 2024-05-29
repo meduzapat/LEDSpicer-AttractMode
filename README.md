@@ -37,3 +37,4 @@ The LEDSpicer Plugin allows you to configure the following options:
 
 5. **Screensaver Mode**: This option activates a screensaver mode where a predefined lighting pattern or animation is displayed when AttractMode is idle for a certain period. This is useful for showcasing your setup or protecting your display from burn-in.
 
+![ledspicerTag1](https://github.com/meduzapat/LEDSpicer-AttractMode/assets/15333057/080214ca-8c37-4716-a178-bd18c95b3eab)
