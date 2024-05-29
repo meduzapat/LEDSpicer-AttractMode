@@ -20,6 +20,8 @@ This will tell LEDSpicer what profile to use based on the currently selected ROM
 
 ## Options
 
+![Plugin Options Menu](https://github.com/meduzapat/LEDSpicer-AttractMode/assets/15333057/0ea00bb1-a8c2-47f8-87a0-91a38c1bde10)
+
 The LEDSpicer Plugin allows you to configure the following options:
 
 1. **Rotate Joysticks**: This option enables the plugin to automatically rotate joysticks to match the configuration required by the current game. If this option is enabled, dynamic joysticks like the Ultimarc Ultrastik 360 or Servostiks will be rotated accordingly.
