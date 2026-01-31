@@ -15,20 +15,20 @@ fe.load_module("helpers")
  ***********************/
 class UserConfig </ help="This plugin: 1. Changes light profiles while navigating AM based on the currently shown rom. 2. Changes light and joystick profiles when a rom is launched. FOR ARCADE SYSTEMS: Emulator System Name must include one of the following, arcade, mame, neo geo, neogeo, fba, final burn, or daphne. FOR CONSOLES: Emulator System Name must match the LEDSPicer profile name (for instance a system named \"Nintendo Entertainment System\" will launch the \"Nintendo Entertainment System.xml\" profile ) " /> {
 	</ label = "Joystick Default Position",
-		options="4-way,8-way,Analog,none,Vertical 2-way"
+		options="4-way,8-way,Analog,None,Vertical 2-way"
 		help="If using dynamic joysticks, you can set a default joystick mode to use while in AttractMode. Your joystick must support the selected mode, or the closest mode will be used instead.",
 		order=0
 	/>
 	default_rotation = "4-way"
 
 	</ label = "Joystick System Position",
-		options="4-way,8-way,Analog,none,Vertical 2-way"
+		options="4-way,8-way,Analog,None,Vertical 2-way"
 		help="If using dynamic joysticks, you can set the joystick mode to use when leaving AttractMode. Your joystick must support the selected mode, or the closest mode will be used instead.",
 		order=1
 	/>
 	system_rotation = "Analog"
 
-	</ label="Iteraction Type",
+	</ label="Interaction Type",
 		options="Rom,Emulator,None",
 		help="Rom will display the current ROM controllers, Emulator will load a profile for the current emulator system ex: system_arcade, None will keep the default profile.",
 		order=2
@@ -83,6 +83,7 @@ class LEDSpicer {
 			case "Vertical 2-way": return "vertical2"
 			case "8-way":          return "8"
 			case "Analog":         return "analog"
+			case "None":           return "None"
 			default:               return "4"
 		}
 	}
@@ -132,7 +133,7 @@ class LEDSpicer {
 		if (debug) {
 			print("Changing to system \"" + currentDisplay + "\"\n")
 		}
-		system("emitter LoadProfile \"system_" + currentDisplay + "\" -f \"NO_TRANSITIONS|NO_ROTATOR|REPLACE\" > /dev/null 2>&1")
+		system("emitter LoadProfile \"system_" + currentDisplay + "\" -f \"NO_TRANSITIONS|REPLACE\" > /dev/null 2>&1")
 	}
 
 	/**
@@ -147,8 +148,8 @@ class LEDSpicer {
 		if (debug) {
 			print("Reseting\n" + (rotate ? "Rotating to: " + default_rotation + "\n": "") + "\n")
 		}
-		system("emitter FinishLastProfile -f \"NO_START_TRANSITION\" > /dev/null 2>&1")
-		if (rotate) {
+		system("emitter FinishLastProfile -f \"NO_TRANSITIONS\" > /dev/null 2>&1")
+		if (rotate && default_rotation != "None") {
 			system("rotator -r " + default_rotation + " > /dev/null 2>&1")
 		}
 	}
@@ -160,7 +161,9 @@ class LEDSpicer {
 		if (debug) {
 			print("Starting\nRotating to: " + default_rotation + "\n")
 		}
-		system("rotator -r " + default_rotation + " > /dev/null 2>&1")
+		if (default_rotation != "None") {
+			system("rotator -r " + default_rotation + " > /dev/null 2>&1")
+		}
 		select()
 	}
 
@@ -171,7 +174,9 @@ class LEDSpicer {
 		if (debug) {
 			print("Shutting down\nRotating to: " + system_rotation + "\n")
 		}
-		system("rotator -r " + system_rotation + " > /dev/null 2>&1")
+		if (system_rotation != "None") {
+			system("rotator -r " + system_rotation + " > /dev/null 2>&1")
+		}
 		system("emitter FinishAllProfiles > /dev/null 2>&1")
 	}
 
@@ -231,7 +236,7 @@ class LEDSpicer {
 						if (debug) {
 							print("Screensaver " + screensaver + "\n")
 						}
-						system("emitter LoadProfile \"" + screensaver + "\" -f \"NO_END_TRANSITIONS|NO_INPUTS\" > /dev/null 2>&1")
+						system("emitter LoadProfile \"" + screensaver + "\" -f \"NO_INPUTS\" > /dev/null 2>&1")
 					}
 					break
 				}
