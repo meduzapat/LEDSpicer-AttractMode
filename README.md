@@ -1,40 +1,75 @@
-# LEDSpicer Plugin
+# LEDSpicer Plugin for Attract-Mode
 
-The LEDSpicer Plugin for AttractMode works with LEDSpicer to change your lighting configuration based on your currently selected ROM in AttractMode.
+The LEDSpicer Plugin for Attract-Mode works with LEDSpicer to change your lighting configuration and joystick restrictors based on your currently selected ROM.
+
+## Requirements
+
+- [LEDSpicer](https://github.com/meduzapat/LEDSpicer) 0.7.0+ (compatible with 0.6.4+)
+- Attract-Mode frontend
 
 ## Installation
 
-*NOTE:* Make sure you have [LEDSpicer](https://github.com/meduzapat/LEDSpicer/wiki) installed and configured or this plugin will not work, and will probably aggravate your system.
+1. Make sure LEDSpicer is installed and configured
+2. Copy the `LEDSpicer` folder to your Attract-Mode plugins directory
+3. Ensure correct permissions are set so Attract-Mode can access the plugin
+4. Start (or restart) Attract-Mode and enable the plugin
 
-Once you've confirmed LEDSpicer is installed and working, add the LEDSpicer Plugin folder to the plugins folder of AttractMode (make sure the correct permissions are set on the folder so that AttractMode can see the newly added plugin). Start (or restart) AttractMode and enable the plugin.
+## How It Works
 
-## Setup
+The plugin calls the LEDSpicer emitter with commands like:
+```
+emitter LoadProfileByEmulator digdug arcade -f "NO_ROTATOR"
+```
 
-The plugin calls the LEDSpicer app with a command similar to this:
+This tells LEDSpicer which profile to load based on the currently selected ROM and emulator name.
 
-    ledspicer LoadProfileByEmulator digdug arcade -f "NO_ROTATOR"
+**Important:** The emulator name passed to LEDSpicer is the *configured emulator name* in Attract-Mode. If you named your emulator "Bob", then "bob" will be passed to LEDSpicer (uppercase is converted to lowercase). Use descriptive names like "arcade", "nes", "daphne", "mame", etc.
 
-This will tell LEDSpicer what profile to use based on the currently selected ROM name and emulator name, but will not make any changes to dynamic joysticks like the Ultimarc Ultrastik 360, Servostiks or others.
+### Arcade Detection
 
-*VERY IMPORTANT CONFIGURATION NOTE:* The emulator name is the *configured emulator name* in AttractMode. If you named your emulator "Bob" when you created it in AttractMode, then the emulator name passed to LEDSpicer will be "Bob". So, name it something like "Arcade" (if using RetroPie) or "NES", "Daphne", "Mame" etc. Any uppercase letters in the name will be converted to lowercase, so you at least don't have to worry about that.
+The plugin automatically detects arcade-type systems by matching emulator names containing: `arcade`, `mame`, `neo geo`, `neogeo`, `fba`, `final burn`, or `daphne`.
 
 ## Options
 
 ![Plugin Options Menu](https://github.com/meduzapat/LEDSpicer-AttractMode/assets/15333057/0ea00bb1-a8c2-47f8-87a0-91a38c1bde10)
 
-The LEDSpicer Plugin allows you to configure the following options:
+### Joystick Default Position
 
-1. **Rotate Joysticks**: This option enables the plugin to automatically rotate joysticks to match the configuration required by the current game. If this option is enabled, dynamic joysticks like the Ultimarc Ultrastik 360 or Servostiks will be rotated accordingly.
+Sets the restrictor mode while navigating Attract-Mode.
 
-2. **Reset Joysticks**: This option allows the plugin to reset joysticks to their default position or configuration when exiting a game or returning to the menu. This ensures that the joysticks are in a known state before starting another game.
+Options: `4-way`, `8-way`, `Analog`, `None`, `Vertical 2-way`
 
-3. **Iteration Type**: This option determines how the LEDSpicer profile changes as you navigate through AttractMode. There are three settings for this option:
-   - **None**: No profile changes occur during navigation.
-   - **ROM**: The profile changes based on the currently selected ROM. This provides immediate feedback and lighting changes based on the selected game, even before starting it.
-   - **Emulator**: The profile changes based on the selected gaming system or emulator. When you select a different system, the lighting profile will adjust to match the requirements of that system.
+### Joystick System Position
 
-4. **Allow Animations on Navigation**: If enabled, this option permits animations to play when navigating through games. These animations can be configured in LEDSpicer and provide a more dynamic visual experience as you browse your game collection.
+Sets the restrictor mode when exiting Attract-Mode (returning to the system).
 
-5. **Screensaver Mode**: This option activates a screensaver mode where a predefined lighting pattern or animation is displayed when AttractMode is idle for a certain period. This is useful for showcasing your setup or protecting your display from burn-in.
+Options: `4-way`, `8-way`, `Analog`, `None`, `Vertical 2-way`
+
+### Interaction Type
+
+Determines how LED profiles change during navigation:
+
+| Setting | Behavior |
+|---------|----------|
+| None | No profile changes occur during navigation |
+| Rom | Profile changes based on the currently selected ROM |
+| Emulator | Profile changes based on the selected system/emulator |
+
+### Allow Animations on Navigation
+
+When enabled, profile animations will play while browsing games. Disable for static lighting during navigation.
+
+### Screen Saver Profile
+
+The profile name to load when the screen saver activates. Leave empty to disable screen saver integration.
 
 ![ledspicerTag1](https://github.com/meduzapat/LEDSpicer-AttractMode/assets/15333057/080214ca-8c37-4716-a178-bd18c95b3eab)
+
+## Debugging
+
+To enable debug output, edit `plugin.nut` and set:
+```squirrel
+debug = true
+```
+
+This will print diagnostic information to the console.
